@@ -9,22 +9,14 @@ class AuthMethod(Enum):
     OTHER = 1
 
 
-def auth(username, passw, auth_method=AuthMethod.OTHER):
-    print(f"Authenticating with method '{auth_method.name}'...")
-
-    auth_funcs = {AuthMethod.OTHER: other_auth}
-
-    return auth_funcs[auth_method](username, passw)
-
-
-def other_auth(email, passw):
+def auth(username, passw):
     """
     Authenticates through X's authentication portal for non-TUD users.
     """
     auth_url = "https://backbone-web-api.production.delft.delcom.nl/auth"
 
     s = requests.Session()
-    r0 = s.post(auth_url, data={"email": email, "password": passw})
+    r0 = s.post(auth_url, data={"email": username, "password": passw})
 
     # Extract and set authorisation headers
     tokens = json.loads(r0.text)

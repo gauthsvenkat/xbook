@@ -1,8 +1,8 @@
-from datetime import datetime
 import json
-import requests
 import time
+from datetime import datetime
 
+import requests
 from auth import auth, terminate_session
 from time_slot_manip import date_and_hour_to_time_slot_str
 
@@ -16,12 +16,12 @@ def login_and_book_slot(uname, passw, mem_id, auth_meth, date, hour, in_utc):
     day_end = date_and_hour_to_time_slot_str(date, 23, in_utc=True)
     slot_str = date_and_hour_to_time_slot_str(date, hour, in_utc=in_utc)
 
-    attempt_booking(
-        slot_str, day_start, day_end, mem_id, uname, passw, auth_meth)
+    attempt_booking(slot_str, day_start, day_end, mem_id, uname, passw, auth_meth)
 
 
-def attempt_booking(slot_str, start_str, end_str, member_id, username, passw,
-                    auth_method, interval=1):
+def attempt_booking(
+    slot_str, start_str, end_str, member_id, username, passw, auth_method, interval=1
+):
     """
     Continuously checks in intervals of `interval` seconds if the time slot
     with the given `slot_str` is available and attempts to book it if it is. If
@@ -45,7 +45,7 @@ def attempt_booking(slot_str, start_str, end_str, member_id, username, passw,
         if not slot["isAvailable"]:
             continue
 
-        (session, token, mem_id_from_auth) = auth(username, passw, auth_method)
+        (session, token, mem_id_from_auth) = auth(username, passw)
         if mem_id_from_auth is not None:
             member_id = mem_id_from_auth
         booked = book_slot(slot, member_id, session, token)
@@ -71,11 +71,13 @@ def booking_schedule(start_str, end_str):
     with time-related parameters should be formatted as such.
     """
     now_str = datetime.today().strftime("%Y-%m-%dT%H:%M:%S")
-    url = f"https://backbone-web-api.production.delft.delcom.nl/bookable-s" + \
-          f"lots?s=%7B%22startDate%22:%22{start_str}%22,%22endDate%22" + \
-          f":%22{end_str}%22,%22tagIds%22:%7B%22$in%22:%5B28%5D%7D,%2" + \
-          f"2availableFromDate%22:%7B%22$gt%22:%22{now_str}%22%7D,%22" + \
-          f"availableTillDate%22:%7B%22$gte%22:%22{now_str}%22%7D%7D"
+    url = (
+        f"https://backbone-web-api.production.delft.delcom.nl/bookable-s"
+        + f"lots?s=%7B%22startDate%22:%22{start_str}%22,%22endDate%22"
+        + f":%22{end_str}%22,%22tagIds%22:%7B%22$in%22:%5B28%5D%7D,%2"
+        + f"2availableFromDate%22:%7B%22$gt%22:%22{now_str}%22%7D,%22"
+        + f"availableTillDate%22:%7B%22$gte%22:%22{now_str}%22%7D%7D"
+    )
 
     return json.loads(requests.get(url).text)["data"]
 
@@ -122,10 +124,10 @@ def book_slot(slot, member_id, session, token=None):
             "bookingId": slot["bookingId"],
             "invitedMemberEmails": [],
             "invitedGuests": [],
-            "invitedOthers": []
+            "invitedOthers": [],
             # "primaryPurchaseMessage": null,
             # "secondaryPurchaseMessage": null
-        }
+        },
         # "dateOfRegistration": null
     }
 
@@ -143,7 +145,9 @@ def cancel_slot(slot_id, session):
 
     Returns whether the booking was successfully cancelled.
     """
-    url = f"https://backbone-web-api.production.delft.delcom.nl/participations/{slot_id}"
+    url = (
+        f"https://backbone-web-api.production.delft.delcom.nl/participations/{slot_id}"
+    )
     r = session.delete(url)
 
     return r.ok
