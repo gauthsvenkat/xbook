@@ -18,7 +18,7 @@ options:
   --password password  The password you use to log in to X's website.
   --utc                Whether or not the provided date and hour are in UTC.
 ```
-The terminal output below showcases a standard usage example that books the fitness time slot from 17:00 to 18:00 on August 9th 2022. Note that the given `hour` value corresponds to the desired time in the Netherlands, while the output and X's backend deal with timestamps in UTC. 
+The terminal output below showcases a standard usage example that books the fitness time slot from 17:00 to 18:00 on August 9th 2022. Note that the given `hour` value corresponds to the desired time in the Netherlands, while the output and X's backend deal with timestamps in UTC.
 ```
 > python xbook.py 2022-08-09 17
 Password for X login:

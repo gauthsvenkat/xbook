@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 
 
-def date_and_hour_to_time_slot_str(date_str, start_hour, in_utc=False,
-                                   with_millis=True):
+def date_and_hour_to_time_slot_str(
+    date_str, start_hour, in_utc=False, with_millis=True
+):
     """
     Uses the given date string and hour to generate a time slot string for X
     formatted as "YYYY-MM-DDTHH:MM:SS.MSSZ", e.g. "2021-12-25T17:59:59.999Z".
