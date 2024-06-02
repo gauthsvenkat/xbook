@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "xbook"
+version = "0.1.0"
+description = "A command line tool for the checking and bookings of fitness time slots at X, TU Delft's sports & culture centre."
+authors = ["Fiske Schijlen"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.32.3"
+pkce = "^1.0.3"
+urllib3 = "^2.2.1"
+pydantic = "^2.7.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
