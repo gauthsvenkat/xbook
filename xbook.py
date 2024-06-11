@@ -69,7 +69,7 @@ def available_slots_for_day(slot_time: datetime) -> list[dict]:
     start_str: str = to_utc_str(day_start(slot_time))
     end_str: str = to_utc_str(day_end(slot_time))
 
-    LOGGER.info(f"Checking availability between {start_str} and {end_str} at {now_str}")
+    LOGGER.info(f"Get available slots between {start_str} and {end_str} at {now_str}")
 
     url: str = (
         "https://backbone-web-api.production.delft.delcom.nl/bookable-s"
@@ -148,6 +148,7 @@ def attempt_booking(slot_time: datetime, username: str, password: str) -> bool:
     return response.ok
 
 
+@app.command()
 def xbook(
     username: Annotated[str, Option(envvar="X_USERNAME", prompt=True)],
     password: Annotated[str, Option(envvar="X_PASSWORD", prompt=True)],
