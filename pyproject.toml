@@ -2,17 +2,19 @@
 name = "xbook"
 version = "0.1.0"
 description = "A command line tool for the checking and bookings of fitness time slots at X, TU Delft's sports & culture centre."
-authors = ["Fiske Schijlen"]
-readme = "README.md"
+authors = ["Fiske Schijlen", "Gautham Venkataraman"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.12"
 requests = "^2.32.3"
-pkce = "^1.0.3"
-urllib3 = "^2.2.1"
-pydantic = "^2.7.2"
-click = "^8.1.7"
+typer = "^0.12.3"
+rich = "^13.7.1"
 
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.10.0"
+types-dateparser = "^1.2.0.20240420"
+types-requests = "^2.32.0.20240602"
 
 [build-system]
 requires = ["poetry-core"]
