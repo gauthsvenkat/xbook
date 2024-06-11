@@ -1,12 +1,6 @@
 import json
-from enum import Enum
 
 import requests
-
-
-class AuthMethod(Enum):
-    TUD_SSO = 0
-    OTHER = 1
 
 
 def auth(username, passw):

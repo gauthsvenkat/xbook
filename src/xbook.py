@@ -1,6 +1,5 @@
 import click
 import urllib3
-from auth import AuthMethod
 from booking import login_and_book_slot
 
 # The certificate for x.tudelft.nl is untrusted, which produces many warnings
@@ -38,7 +37,6 @@ def cli(**kwargs):
         kwargs["email"],
         kwargs["password"],
         "",
-        AuthMethod.OTHER,
         kwargs["date"],
         kwargs["hour"],
         False,

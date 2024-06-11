@@ -7,7 +7,7 @@ from auth import auth, terminate_session
 from time_slot_manip import date_and_hour_to_time_slot_str
 
 
-def login_and_book_slot(uname, passw, mem_id, auth_meth, date, hour, in_utc):
+def login_and_book_slot(uname, passw, mem_id, date, hour, in_utc):
     """
     Authenticates to X with the given credentials and attempts to book the gym
     time slot corresponding to the given start `hour` on the given `day`.
@@ -16,11 +16,11 @@ def login_and_book_slot(uname, passw, mem_id, auth_meth, date, hour, in_utc):
     day_end = date_and_hour_to_time_slot_str(date, 23, in_utc=True)
     slot_str = date_and_hour_to_time_slot_str(date, hour, in_utc=in_utc)
 
-    attempt_booking(slot_str, day_start, day_end, mem_id, uname, passw, auth_meth)
+    attempt_booking(slot_str, day_start, day_end, mem_id, uname, passw)
 
 
 def attempt_booking(
-    slot_str, start_str, end_str, member_id, username, passw, auth_method, interval=1
+    slot_str, start_str, end_str, member_id, username, passw, interval=1
 ):
     """
     Continuously checks in intervals of `interval` seconds if the time slot
