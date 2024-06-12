@@ -1,10 +1,13 @@
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
+from pathlib import Path
 from typing import cast
 
 import typer
 from dateparser import parse
+from google.oauth2 import service_account
+from googleapiclient.discovery import build  # type: ignore[import-untyped]
 from requests import Response, Session, get
 from rich.logging import RichHandler
 from typer import Option, Typer
@@ -23,8 +26,6 @@ DOMAIN: str = "backbone-web-api.production.delft.delcom.nl"
 HOST: str = f"https://{DOMAIN}"
 AUTH_ENDPOINT: str = f"{HOST}/auth"
 BOOKING_ENDPOINT: str = f"{HOST}/participations"
-
-app = Typer()
 
 
 def validate_when(when: str) -> datetime:
@@ -148,12 +149,13 @@ def attempt_booking(slot_time: datetime, username: str, password: str) -> bool:
     return response.ok
 
 
-@app.command()
+@(app := Typer()).command()
 def xbook(
     username: Annotated[str, Option(envvar="X_USERNAME", prompt=True)],
     password: Annotated[str, Option(envvar="X_PASSWORD", prompt=True)],
     when: Annotated[str, Option(prompt=True, callback=validate_when)] = "4pm tomorrow",
     sleep_interval: int = 60 * 1,
+    service_account_file: Optional[str] = "credentials.json",
 ) -> None:
     slot_time: datetime = cast(datetime, when)
 
@@ -164,6 +166,36 @@ def xbook(
     LOGGER.info(
         f"Successfully booked slot {slot_time.date()} at {slot_time.hour}h (Europe/Amsterdam)"
     )
+
+    if (
+        service_account_file
+        and Path(service_account_file).exists()
+        and (
+            calendar := build(
+                "calendar",
+                "v3",
+                credentials=service_account.Credentials.from_service_account_file(
+                    service_account_file
+                ),
+            )
+        )
+    ):
+        LOGGER.info("Attempting to add event to calendar.")
+
+        calendar.events().insert(
+            calendarId=username,
+            body={
+                "summary": "Gym",
+                "location": "Mekelweg 8-10, 2628 CD Delft",
+                "start": {"dateTime": to_utc_str(slot_time), "timeZone": "UTC"},
+                "end": {
+                    "dateTime": to_utc_str(slot_time + timedelta(hours=1, minutes=30)),
+                    "timeZone": "UTC",
+                },
+            },
+        ).execute()
+
+        LOGGER.info(f"Event added to calendar {username}")
 
 
 if __name__ == "__main__":
