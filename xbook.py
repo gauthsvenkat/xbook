@@ -9,6 +9,7 @@ from dateparser import parse
 from google.oauth2 import service_account
 from googleapiclient.discovery import build  # type: ignore[import-untyped]
 from requests import Response, Session, get
+from requests.exceptions import HTTPError
 from rich.logging import RichHandler
 from typer import Option, Typer
 from typing_extensions import Annotated, Optional
@@ -65,6 +66,14 @@ def to_utc_str(some_datetime: datetime) -> str:
     )
 
 
+def raise_for_status(response: Response) -> None:
+    try:
+        response.raise_for_status()
+    except HTTPError as e:
+        LOGGER.error(f"Response: {response.text}")
+        raise e
+
+
 def available_slots_for_day(slot_time: datetime) -> list[dict]:
     now_str: str = to_utc_str(datetime.now())
     start_str: str = to_utc_str(day_start(slot_time))
@@ -81,7 +90,7 @@ def available_slots_for_day(slot_time: datetime) -> list[dict]:
     )
 
     response: Response = get(url)
-    response.raise_for_status()
+    raise_for_status(response)
 
     slots: list[dict] = response.json()["data"]
 
@@ -111,7 +120,7 @@ def attempt_booking(slot_time: datetime, username: str, password: str) -> bool:
         response: Response = sess.post(
             AUTH_ENDPOINT, data={"email": username, "password": password}
         )
-        response.raise_for_status()
+        raise_for_status(response)
         LOGGER.info("Authenticated successfully. Getting member ID...")
 
         sess.headers.update(
@@ -122,7 +131,7 @@ def attempt_booking(slot_time: datetime, username: str, password: str) -> bool:
         )
 
         response = sess.get(AUTH_ENDPOINT)
-        response.raise_for_status()
+        raise_for_status(response)
 
         member_id: str = response.json()["id"]
 
@@ -145,6 +154,8 @@ def attempt_booking(slot_time: datetime, username: str, password: str) -> bool:
                 },
             },
         )
+
+        raise_for_status(response)
 
     return response.ok
 
