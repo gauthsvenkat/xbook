@@ -164,7 +164,7 @@ def attempt_booking(slot_time: datetime, username: str, password: str) -> bool:
 def xbook(
     username: Annotated[str, Option(envvar="X_USERNAME", prompt=True)],
     password: Annotated[str, Option(envvar="X_PASSWORD", prompt=True)],
-    when: Annotated[str, Option(prompt=True, callback=validate_when)] = "4pm tomorrow",
+    when: Annotated[str, Option(prompt=True, callback=validate_when)] = "7am",
     sleep_interval: int = 60 * 1,
     service_account_file: Optional[str] = "credentials.json",
 ) -> None:

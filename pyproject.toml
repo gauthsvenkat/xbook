@@ -1,26 +1,28 @@
-[tool.poetry]
+[project]
 name = "xbook"
-version = "0.1.0"
+version = "1.0.0"
 description = "A command line tool for the checking and bookings of fitness time slots at X, TU Delft's sports & culture centre."
-authors = ["Fiske Schijlen", "Gautham Venkataraman"]
+authors = [{ name = "Fiske Schijlen" }, { name = "Gautham Venkataraman" }]
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+  "dateparser ~= 1.2.0",
+  "google-api-python-client ~= 2.133.0",
+  "requests ~= 2.32.3",
+  "rich ~= 13.7.1",
+  "typer ~= 0.12.3",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-requests = "^2.32.3"
-typer = "^0.12.3"
-rich = "^13.7.1"
-google-api-python-client = "^2.133.0"
-dateparser = "^1.2.0"
-
-
-[tool.poetry.group.dev.dependencies]
-mypy = "^1.10.0"
-types-dateparser = "^1.2.0.20240420"
-types-requests = "^2.32.0.20240602"
-
-[tool.poetry.scripts]
+[project.scripts]
 xbook = "xbook:app"
 
+[tool.uv]
+dev-dependencies = [
+  "mypy ~= 1.10.0",
+  "types-dateparser ~= 1.2.0.20240420",
+  "types-requests ~= 2.32.0.20240602",
+]
+
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
