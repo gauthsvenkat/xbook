@@ -25,7 +25,7 @@ LOGGER = logging.getLogger("rich")
 
 DOMAIN: str = "backbone-web-api.production.delft.delcom.nl"
 HOST: str = f"https://{DOMAIN}"
-AUTH_ENDPOINT: str = f"{HOST}/auth"
+AUTH_ENDPOINT: str = f"{HOST}/auth?cf=0"
 BOOKING_ENDPOINT: str = f"{HOST}/participations"
 
 

@@ -1,4 +1,6 @@
 .venv
 .ruff_cache
 .mypy_cache
+.envrc
+__pycache__/
 credentials.json
